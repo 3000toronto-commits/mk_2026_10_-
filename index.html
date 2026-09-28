@@ -1,0 +1,3485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* =========================================================
+   ИЗОЛИРОВАННЫЙ ИНТЕРАКТИВ
+   ========================================================= */
+
+.cforesearch-widget{
+  --cfr-asphalt:#202624;
+  --cfr-muted:#626B67;
+
+  --cfr-pistachio:#AEBE72;
+  --cfr-pistachio-dark:#6F7D35;
+  --cfr-pistachio-light:#EEF3D8;
+
+  --cfr-orange:#D77A32;
+  --cfr-orange-dark:#A9551F;
+  --cfr-orange-light:#FBE8D6;
+
+  --cfr-sand:#DDC797;
+  --cfr-sand-dark:#927239;
+  --cfr-sand-light:#F7F0E2;
+
+  --cfr-chocolate:#57392E;
+  --cfr-chocolate-light:#EEE4DE;
+
+  --cfr-error:#B5574F;
+  --cfr-error-light:#FBE8E6;
+
+  --cfr-white:#FFFFFF;
+  --cfr-bg:#FBFAF6;
+  --cfr-border:#DDD9D0;
+
+  width:100%;
+  max-width:1160px;
+  margin:20px auto;
+
+  color:var(--cfr-asphalt);
+  font-family:Arial,Helvetica,sans-serif;
+  line-height:1.48;
+}
+
+.cforesearch-widget,
+.cforesearch-widget *,
+.cforesearch-widget *::before,
+.cforesearch-widget *::after{
+  box-sizing:border-box;
+}
+
+.cforesearch-widget button,
+.cforesearch-widget textarea{
+  font:inherit;
+}
+
+.cforesearch-shell{
+  overflow:hidden;
+  border:1px solid var(--cfr-border);
+  border-radius:22px;
+  background:var(--cfr-bg);
+  box-shadow:0 14px 34px rgba(75,58,45,.08);
+}
+
+
+/* =========================================================
+   ВКЛАДКИ
+   ========================================================= */
+
+.cforesearch-tabs-wrap{
+  padding:18px 26px 0;
+}
+
+.cforesearch-tabs{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:7px;
+
+  padding:6px;
+
+  border:1px solid #E4DED1;
+  border-radius:15px;
+
+  background:var(--cfr-sand-light);
+}
+
+.cforesearch-tab{
+  min-height:48px;
+  padding:8px 9px;
+
+  border:0;
+  border-radius:11px;
+
+  background:transparent;
+  color:var(--cfr-muted);
+
+  font-size:13px;
+  font-weight:800;
+
+  cursor:pointer;
+  transition:.15s ease;
+}
+
+.cforesearch-tab:hover:not(:disabled){
+  background:rgba(255,255,255,.75);
+}
+
+.cforesearch-tab.cforesearch-active{
+  background:var(--cfr-chocolate);
+  color:#fff;
+}
+
+.cforesearch-tab.cforesearch-done:not(.cforesearch-active){
+  background:var(--cfr-pistachio-light);
+  color:var(--cfr-pistachio-dark);
+}
+
+.cforesearch-tab:disabled{
+  opacity:.38;
+  cursor:not-allowed;
+}
+
+.cforesearch-tab-number{
+  display:none;
+}
+
+
+/* =========================================================
+   ОСНОВНЫЕ ЭКРАНЫ
+   ========================================================= */
+
+.cforesearch-panels{
+  padding:30px 34px 34px;
+}
+
+.cforesearch-panel{
+  display:none;
+}
+
+.cforesearch-panel.cforesearch-active{
+  display:block;
+  animation:cforesearchFade .2s ease;
+}
+
+@keyframes cforesearchFade{
+  from{
+    opacity:0;
+    transform:translateY(4px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+.cforesearch-panel-head{
+  margin-bottom:21px;
+}
+
+.cforesearch-step{
+  margin-bottom:6px;
+
+  color:var(--cfr-orange-dark);
+
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.cforesearch-panel-head h3{
+  margin:0 0 8px;
+
+  color:var(--cfr-asphalt);
+
+  font-size:27px;
+  line-height:1.15;
+}
+
+.cforesearch-panel-head p{
+  max-width:870px;
+  margin:0;
+
+  color:var(--cfr-muted);
+}
+
+
+/* =========================================================
+   ОБЩИЕ ЭЛЕМЕНТЫ
+   ========================================================= */
+
+.cforesearch-card{
+  padding:20px;
+
+  border:1px solid var(--cfr-border);
+  border-radius:16px;
+
+  background:#fff;
+}
+
+.cforesearch-case{
+  margin-bottom:18px;
+  padding:20px 22px;
+
+  border:1px solid #DCCCA9;
+  border-radius:16px;
+
+  background:var(--cfr-sand-light);
+}
+
+.cforesearch-case-label{
+  display:block;
+  margin-bottom:7px;
+
+  color:var(--cfr-chocolate);
+
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.cforesearch-case p{
+  margin:0;
+
+  color:var(--cfr-asphalt);
+
+  font-size:17px;
+  font-weight:700;
+}
+
+.cforesearch-actions{
+  display:flex;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:10px;
+
+  margin-top:18px;
+}
+
+.cforesearch-actions-between{
+  justify-content:space-between;
+}
+
+.cforesearch-actions-left{
+  justify-content:flex-start;
+}
+
+.cforesearch-btn{
+  min-height:44px;
+  padding:10px 17px;
+
+  border:0;
+  border-radius:11px;
+
+  font-weight:800;
+
+  cursor:pointer;
+  transition:.15s ease;
+}
+
+.cforesearch-btn:hover:not(:disabled){
+  transform:translateY(-1px);
+}
+
+.cforesearch-btn:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+}
+
+.cforesearch-btn-main{
+  background:var(--cfr-chocolate);
+  color:#fff;
+}
+
+.cforesearch-btn-check{
+  background:var(--cfr-orange);
+  color:#fff;
+}
+
+.cforesearch-btn-back{
+  border:1px solid #C8AD70;
+  background:var(--cfr-sand);
+  color:var(--cfr-chocolate);
+}
+
+.cforesearch-btn-restart{
+  border:1px solid #95A45C;
+  background:var(--cfr-pistachio);
+  color:var(--cfr-asphalt);
+}
+
+.cforesearch-reveal{
+  display:none;
+  margin-top:18px;
+}
+
+.cforesearch-reveal.cforesearch-show{
+  display:block;
+  animation:cforesearchFade .2s ease;
+}
+
+
+/* =========================================================
+   ШАГ 1
+   ========================================================= */
+
+.cforesearch-question{
+  margin-bottom:10px;
+
+  color:var(--cfr-asphalt);
+
+  font-size:17px;
+  font-weight:800;
+}
+
+.cforesearch-input-wrap{
+  position:relative;
+}
+
+.cforesearch-task-input{
+  display:block;
+
+  width:100%;
+  min-height:135px;
+
+  padding:15px 62px 55px 16px;
+
+  resize:vertical;
+
+  border:1px solid var(--cfr-border);
+  border-radius:15px;
+
+  background:#fff;
+  color:var(--cfr-asphalt);
+
+  line-height:1.48;
+}
+
+.cforesearch-task-input::placeholder{
+  color:#89908D;
+}
+
+.cforesearch-task-input:focus{
+  outline:none;
+  border-color:var(--cfr-orange);
+  box-shadow:0 0 0 3px rgba(215,122,50,.1);
+}
+
+.cforesearch-send{
+  position:absolute;
+  right:12px;
+  bottom:12px;
+
+  width:43px;
+  height:43px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:0;
+
+  border:0;
+  border-radius:50%;
+
+  background:var(--cfr-chocolate);
+  color:#fff;
+
+  font-size:23px;
+  font-weight:800;
+
+  cursor:pointer;
+}
+
+.cforesearch-send:disabled{
+  opacity:.35;
+  cursor:not-allowed;
+}
+
+.cforesearch-structure{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+
+  margin:16px 0;
+}
+
+.cforesearch-structure-item{
+  position:relative;
+
+  padding:16px 12px;
+
+  border:1px solid #D8CFBC;
+  border-radius:13px;
+
+  background:var(--cfr-sand-light);
+
+  text-align:center;
+}
+
+.cforesearch-structure-item strong{
+  display:block;
+
+  margin-bottom:3px;
+
+  color:var(--cfr-chocolate);
+}
+
+.cforesearch-structure-item span{
+  color:var(--cfr-muted);
+  font-size:13px;
+}
+
+.cforesearch-structure-item:not(:last-child)::after{
+  content:"→";
+
+  position:absolute;
+  top:50%;
+  right:-18px;
+  z-index:2;
+
+  transform:translateY(-50%);
+
+  color:var(--cfr-orange);
+  font-weight:900;
+}
+
+.cforesearch-example{
+  padding:17px;
+
+  border-left:4px solid var(--cfr-orange);
+  border-radius:0 13px 13px 0;
+
+  background:var(--cfr-orange-light);
+}
+
+.cforesearch-example-title{
+  margin-bottom:6px;
+
+  color:var(--cfr-orange-dark);
+
+  font-size:13px;
+  font-weight:900;
+}
+
+.cforesearch-example p{
+  margin:0;
+  color:var(--cfr-asphalt);
+}
+
+.cforesearch-tip{
+  display:flex;
+  align-items:flex-start;
+  gap:11px;
+
+  margin-top:14px;
+  padding:15px 16px;
+
+  border:1px solid #D2DBA7;
+  border-radius:14px;
+
+  background:var(--cfr-pistachio-light);
+}
+
+.cforesearch-tip-icon{
+  flex:0 0 30px;
+
+  width:30px;
+  height:30px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:var(--cfr-pistachio);
+  color:var(--cfr-asphalt);
+
+  font-weight:900;
+}
+
+.cforesearch-tip strong{
+  color:var(--cfr-pistachio-dark);
+}
+
+
+/* =========================================================
+   КОРЗИНЫ И ПЕРЕТАСКИВАНИЕ
+   ========================================================= */
+
+.cforesearch-board{
+  margin-top:16px;
+}
+
+.cforesearch-zones{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.cforesearch-prompt-zones{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+
+.cforesearch-dropzone{
+  min-width:0;
+  min-height:190px;
+
+  padding:13px;
+
+  border:1px dashed #CFC6B7;
+  border-radius:16px;
+
+  background:#FFFEFB;
+
+  transition:.15s ease;
+}
+
+.cforesearch-dropzone.cforesearch-drop-hover{
+  border-color:var(--cfr-orange);
+  background:var(--cfr-orange-light);
+}
+
+.cforesearch-dropzone-title{
+  margin-bottom:11px;
+  padding-bottom:9px;
+
+  border-bottom:1px solid #EAE3D7;
+
+  color:var(--cfr-chocolate);
+
+  font-size:15px;
+  font-weight:900;
+  line-height:1.3;
+}
+
+.cforesearch-dropzone-content{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.cforesearch-drag-card{
+  padding:11px 12px;
+
+  border:1px solid var(--cfr-border);
+  border-radius:12px;
+
+  background:#fff;
+  color:var(--cfr-asphalt);
+
+  box-shadow:0 3px 9px rgba(77,59,46,.045);
+
+  font-size:14px;
+  font-weight:700;
+  line-height:1.38;
+
+  cursor:grab;
+
+  transition:
+    transform .12s ease,
+    border-color .12s ease,
+    background .12s ease;
+}
+
+.cforesearch-drag-card:hover{
+  transform:translateY(-1px);
+  border-color:#C9BA9C;
+}
+
+.cforesearch-drag-card:active{
+  cursor:grabbing;
+}
+
+.cforesearch-drag-card.cforesearch-selected{
+  border-color:var(--cfr-orange);
+  background:var(--cfr-orange-light);
+}
+
+.cforesearch-drag-card.cforesearch-correct{
+  border:1px solid var(--cfr-pistachio);
+  background:var(--cfr-pistachio-light);
+}
+
+.cforesearch-drag-card.cforesearch-wrong{
+  border:1px solid var(--cfr-error);
+  background:var(--cfr-error-light);
+}
+
+.cforesearch-card-feedback{
+  margin-top:8px;
+  padding-top:7px;
+
+  border-top:1px solid rgba(32,38,36,.09);
+
+  font-size:12px;
+  font-weight:700;
+}
+
+.cforesearch-feedback-correct{
+  color:var(--cfr-pistachio-dark);
+}
+
+.cforesearch-feedback-wrong{
+  color:var(--cfr-error);
+}
+
+.cforesearch-board-instruction{
+  margin-bottom:14px;
+  padding:13px 15px;
+
+  border:1px solid #D8C99F;
+  border-radius:13px;
+
+  background:var(--cfr-sand-light);
+
+  color:var(--cfr-asphalt);
+}
+
+.cforesearch-board-instruction strong{
+  color:var(--cfr-chocolate);
+}
+
+
+/* =========================================================
+   ОБЪЯСНЕНИЯ
+   ========================================================= */
+
+.cforesearch-source-note{
+  padding:18px;
+
+  border:1px solid #D9C89D;
+  border-radius:15px;
+
+  background:var(--cfr-sand-light);
+}
+
+.cforesearch-source-note h4{
+  margin:0 0 8px;
+
+  color:var(--cfr-chocolate);
+
+  font-size:18px;
+}
+
+.cforesearch-source-note p{
+  margin:0;
+  color:var(--cfr-asphalt);
+}
+
+.cforesearch-rule{
+  margin-top:12px;
+  padding:14px 16px;
+
+  border:1px solid #CDD8A0;
+  border-radius:13px;
+
+  background:var(--cfr-pistachio-light);
+
+  color:var(--cfr-pistachio-dark);
+
+  font-weight:800;
+}
+
+
+/* =========================================================
+   ШАГ 3
+   ========================================================= */
+
+.cforesearch-facts-box{
+  padding:18px;
+
+  border:1px solid #D8C99F;
+  border-radius:16px;
+
+  background:var(--cfr-sand-light);
+}
+
+.cforesearch-facts-title{
+  margin-bottom:9px;
+
+  color:var(--cfr-chocolate);
+
+  font-weight:900;
+}
+
+.cforesearch-facts-box ul{
+  margin:0;
+  padding-left:20px;
+}
+
+.cforesearch-facts-box li{
+  margin-bottom:6px;
+}
+
+.cforesearch-conclusions-title{
+  margin:21px 0 10px;
+
+  font-size:17px;
+  font-weight:900;
+}
+
+.cforesearch-conclusions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.cforesearch-conclusion{
+  width:100%;
+
+  padding:15px;
+
+  border:1px solid var(--cfr-border);
+  border-radius:14px;
+
+  background:#fff;
+  color:var(--cfr-asphalt);
+
+  text-align:left;
+  line-height:1.43;
+
+  cursor:pointer;
+}
+
+.cforesearch-conclusion.cforesearch-selected{
+  border:2px solid var(--cfr-orange);
+  background:var(--cfr-orange-light);
+}
+
+.cforesearch-conclusion.cforesearch-result-good{
+  border:1px solid var(--cfr-pistachio);
+  background:var(--cfr-pistachio-light);
+}
+
+.cforesearch-conclusion.cforesearch-result-wrong{
+  border:1px solid var(--cfr-error);
+  background:var(--cfr-error-light);
+}
+
+.cforesearch-conclusion.cforesearch-result-warning{
+  border:1px solid var(--cfr-orange);
+  background:var(--cfr-orange-light);
+}
+
+.cforesearch-conclusion-feedback{
+  display:none;
+
+  margin-top:10px;
+  padding-top:9px;
+
+  border-top:1px solid rgba(32,38,36,.1);
+
+  font-size:12px;
+  font-weight:700;
+}
+
+.cforesearch-conclusion.cforesearch-reviewed
+.cforesearch-conclusion-feedback{
+  display:block;
+}
+
+.cforesearch-advice{
+  margin-top:17px;
+  padding:17px;
+
+  border:1px solid #CDD8A0;
+  border-radius:15px;
+
+  background:var(--cfr-pistachio-light);
+}
+
+.cforesearch-advice h4{
+  margin:0 0 7px;
+  color:var(--cfr-pistachio-dark);
+}
+
+.cforesearch-advice p{
+  margin:0;
+}
+
+
+/* =========================================================
+   ШАГ 4
+   ========================================================= */
+
+.cforesearch-limit-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+
+  margin-top:16px;
+}
+
+.cforesearch-limit-card{
+  padding:18px;
+  border-radius:15px;
+}
+
+.cforesearch-limit-card h4{
+  margin:0 0 9px;
+}
+
+.cforesearch-limit-card ul{
+  margin:0;
+  padding-left:20px;
+}
+
+.cforesearch-limit-card li{
+  margin-bottom:6px;
+}
+
+.cforesearch-limit-web{
+  border:1px solid #CDD8A0;
+  background:var(--cfr-pistachio-light);
+}
+
+.cforesearch-limit-web h4{
+  color:var(--cfr-pistachio-dark);
+}
+
+.cforesearch-limit-company{
+  border:1px solid #E2BE9A;
+  background:var(--cfr-orange-light);
+}
+
+.cforesearch-limit-company h4{
+  color:var(--cfr-orange-dark);
+}
+
+
+/* =========================================================
+   ШАГ 5
+   ========================================================= */
+
+.cforesearch-prompt-zone{
+  min-height:170px;
+}
+
+.cforesearch-prompt-done{
+  padding:19px;
+
+  border:1px solid #CDD8A0;
+  border-radius:15px;
+
+  background:var(--cfr-pistachio-light);
+
+  text-align:center;
+}
+
+.cforesearch-prompt-done strong{
+  display:block;
+
+  margin-bottom:5px;
+
+  color:var(--cfr-pistachio-dark);
+
+  font-size:18px;
+}
+
+.cforesearch-download-actions{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+
+  margin-top:17px;
+}
+
+.cforesearch-copy-status{
+  min-height:20px;
+
+  margin-top:8px;
+
+  color:var(--cfr-pistachio-dark);
+
+  font-size:13px;
+  font-weight:800;
+}
+
+
+/* =========================================================
+   НАЧАТЬ ЗАНОВО
+   ========================================================= */
+
+.cforesearch-restart-wrap{
+  display:flex;
+  justify-content:flex-end;
+
+  padding:0 34px 28px;
+}
+
+.cforesearch-restart-wrap.cforesearch-hidden{
+  display:none;
+}
+
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.cforesearch-widget button:focus-visible,
+.cforesearch-widget textarea:focus-visible,
+.cforesearch-dropzone:focus-visible,
+.cforesearch-drag-card:focus-visible{
+  outline:3px solid rgba(215,122,50,.25);
+  outline-offset:2px;
+}
+
+
+/* =========================================================
+   ADAPTIVE
+   ========================================================= */
+
+@media(max-width:920px){
+
+  .cforesearch-tabs-wrap{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+  .cforesearch-panels{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+  .cforesearch-zones,
+  .cforesearch-prompt-zones{
+    grid-template-columns:1fr;
+  }
+
+  .cforesearch-dropzone{
+    min-height:110px;
+  }
+
+  .cforesearch-conclusions{
+    grid-template-columns:1fr;
+  }
+
+  .cforesearch-limit-grid{
+    grid-template-columns:1fr;
+  }
+
+  .cforesearch-restart-wrap{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+}
+
+@media(max-width:650px){
+
+  .cforesearch-widget{
+    margin:0;
+  }
+
+  .cforesearch-shell{
+    border-left:0;
+    border-right:0;
+    border-radius:0;
+  }
+
+  .cforesearch-tabs-wrap{
+    padding:12px 12px 0;
+  }
+
+  .cforesearch-tabs{
+    gap:4px;
+  }
+
+  .cforesearch-tab{
+    min-height:41px;
+    padding:5px;
+  }
+
+  .cforesearch-tab-label{
+    display:none;
+  }
+
+  .cforesearch-tab-number{
+    display:inline;
+  }
+
+  .cforesearch-panels{
+    padding:22px 14px 26px;
+  }
+
+  .cforesearch-panel-head h3{
+    font-size:23px;
+  }
+
+  .cforesearch-structure{
+    grid-template-columns:1fr;
+  }
+
+  .cforesearch-structure-item:not(:last-child)::after{
+    content:"↓";
+
+    top:auto;
+    right:auto;
+    bottom:-19px;
+    left:50%;
+
+    transform:translateX(-50%);
+  }
+
+  .cforesearch-actions,
+  .cforesearch-actions-between,
+  .cforesearch-actions-left{
+    flex-direction:column;
+  }
+
+  .cforesearch-btn{
+    width:100%;
+  }
+
+  .cforesearch-download-actions{
+    flex-direction:column;
+  }
+
+  .cforesearch-restart-wrap{
+    padding:0 14px 22px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<section class="cforesearch-widget" data-cforesearch-root>
+
+<div class="cforesearch-shell">
+
+
+<!-- =====================================================
+     TABS
+     ===================================================== -->
+
+<div class="cforesearch-tabs-wrap">
+
+  <div class="cforesearch-tabs">
+
+    <button type="button"
+            class="cforesearch-tab cforesearch-active"
+            data-cforesearch-tab="0">
+
+      <span class="cforesearch-tab-number">1</span>
+      <span class="cforesearch-tab-label">Задача</span>
+
+    </button>
+
+    <button type="button"
+            class="cforesearch-tab"
+            data-cforesearch-tab="1"
+            disabled>
+
+      <span class="cforesearch-tab-number">2</span>
+      <span class="cforesearch-tab-label">Источники</span>
+
+    </button>
+
+    <button type="button"
+            class="cforesearch-tab"
+            data-cforesearch-tab="2"
+            disabled>
+
+      <span class="cforesearch-tab-number">3</span>
+      <span class="cforesearch-tab-label">Проверка вывода</span>
+
+    </button>
+
+    <button type="button"
+            class="cforesearch-tab"
+            data-cforesearch-tab="3"
+            disabled>
+
+      <span class="cforesearch-tab-number">4</span>
+      <span class="cforesearch-tab-label">Данные для решения</span>
+
+    </button>
+
+    <button type="button"
+            class="cforesearch-tab"
+            data-cforesearch-tab="4"
+            disabled>
+
+      <span class="cforesearch-tab-number">5</span>
+      <span class="cforesearch-tab-label">Промпт</span>
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<div class="cforesearch-panels">
+
+
+<!-- ===================================================
+     ШАГ 1
+     =================================================== -->
+
+<section class="cforesearch-panel cforesearch-active"
+         data-cforesearch-panel="0">
+
+  <div class="cforesearch-panel-head">
+
+    <div class="cforesearch-step">
+      Шаг 1 из 5
+    </div>
+
+    <h3>
+      Сформулируйте задачу для ИИ
+    </h3>
+
+    <p>
+      Начните с того, какое решение вам нужно принять
+      и что именно должен проверить ИИ
+    </p>
+
+  </div>
+
+
+  <div class="cforesearch-case">
+
+    <span class="cforesearch-case-label">
+      Ситуация
+    </span>
+
+    <p>
+      Компания формирует бюджет на 2027 год.
+      Нужно решить, какую ставку заложить по новым кредитам
+    </p>
+
+  </div>
+
+
+  <div class="cforesearch-card">
+
+    <div class="cforesearch-question">
+      Что вы поручите ИИ? Сформулируйте запрос в 1–3 предложениях
+    </div>
+
+    <div class="cforesearch-input-wrap">
+
+      <textarea
+        class="cforesearch-task-input"
+        data-cforesearch-task-input
+        placeholder="Напишите свой запрос…"></textarea>
+
+      <button type="button"
+              class="cforesearch-send"
+              data-cforesearch-send
+              aria-label="Отправить ответ"
+              disabled>
+        ↑
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="cforesearch-reveal"
+       data-cforesearch-screen1-review>
+
+    <div class="cforesearch-card">
+
+      <h4>
+        Что должно быть в хорошем промпте
+      </h4>
+
+
+      <div class="cforesearch-structure">
+
+        <div class="cforesearch-structure-item">
+
+          <strong>Зачем ищем</strong>
+
+          <span>
+            Какое решение нужно принять
+          </span>
+
+        </div>
+
+
+        <div class="cforesearch-structure-item">
+
+          <strong>Что проверяем</strong>
+
+          <span>
+            Какой вопрос должен выяснить ИИ
+          </span>
+
+        </div>
+
+
+        <div class="cforesearch-structure-item">
+
+          <strong>Границы поиска</strong>
+
+          <span>
+            Период, рынок, тип компаний
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="cforesearch-example">
+
+        <div class="cforesearch-example-title">
+          Пример
+        </div>
+
+        <p>
+          Нужно решить, повысить или нет ставку по новым кредитам
+          в бюджете-2027. Проверь, есть ли на текущую дату признаки
+          ухудшения условий рублевого кредитования российских компаний
+          и какие факторы могут повлиять на стоимость новых заимствований
+          в 2027 году
+        </p>
+
+      </div>
+
+
+      <div class="cforesearch-tip">
+
+        <div class="cforesearch-tip-icon">
+          !
+        </div>
+
+        <div>
+
+          <strong>
+            Не просите ИИ доказать, что условия ухудшаются.
+          </strong>
+
+          Попросите проверить, ухудшаются ли они
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="cforesearch-actions">
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-main"
+              data-cforesearch-next="0">
+        Продолжить →
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ===================================================
+     ШАГ 2
+     7 из 9 карточек стоят неправильно
+     =================================================== -->
+
+<section class="cforesearch-panel"
+         data-cforesearch-panel="1">
+
+  <div class="cforesearch-panel-head">
+
+    <div class="cforesearch-step">
+      Шаг 2 из 5
+    </div>
+
+    <h3>
+      Проверьте источники
+    </h3>
+
+    <p>
+      ИИ уже распределил источники. Проверьте его работу
+      и перетащите в другие области только те карточки,
+      которые, по вашему мнению, стоят не на месте
+    </p>
+
+  </div>
+
+
+  <div class="cforesearch-board-instruction">
+
+    <strong>Задача:</strong>
+    исправьте распределение источников с учетом нашей цели —
+    оценить условия корпоративного кредитования и риски
+    для бюджета-2027
+
+  </div>
+
+
+  <div class="cforesearch-board"
+       data-cforesearch-board="sources">
+
+    <div class="cforesearch-zones">
+
+
+      <!-- ОСНОВА:
+           1 правильно, 2 неправильно -->
+
+      <div class="cforesearch-dropzone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="base">
+
+        <div class="cforesearch-dropzone-title">
+          Основа для решения задачи
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="base">
+            Обзор условий банковского кредитования
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="context">
+            Прогноз рейтингового агентства
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="verify">
+            Статья делового СМИ
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- КОНТЕКСТ:
+           1 правильно, 2 неправильно -->
+
+      <div class="cforesearch-dropzone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="context">
+
+        <div class="cforesearch-dropzone-title">
+          Дополнительный контекст
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="base">
+            Решение Банка России по ключевой ставке
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="context">
+            Предложение конкретного банка по кредитованию бизнеса
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="verify">
+            Пост независимого аналитика в Telegram
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ПРОВЕРКА:
+           все 3 неправильно -->
+
+      <div class="cforesearch-dropzone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="verify">
+
+        <div class="cforesearch-dropzone-title">
+          Нужна дополнительная проверка
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="base">
+            Статистика ЦБ по ставкам корпоративных кредитов
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="base">
+            Прогноз Банка России
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="context">
+            Официальный комментарий экономиста крупного банка
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="cforesearch-actions">
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-check"
+              data-cforesearch-check-board="sources">
+        Проверить
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="cforesearch-reveal"
+       data-cforesearch-source-review>
+
+
+    <div class="cforesearch-source-note">
+
+      <h4>
+        Вторичные источники не обязательно исключать, но нужно проверять
+      </h4>
+
+      <p>
+        Публикации в СМИ и комментарии независимых аналитиков могут помочь заметить
+        событие, мнение или новую гипотезу. Но если информация нужна
+        для финансового решения, попросите ИИ найти первоисточник
+        и проверить по нему цифры и факты
+      </p>
+
+    </div>
+
+     <div class="cforesearch-tip">
+
+        <div class="cforesearch-tip-icon">
+          !
+        </div>
+
+        <div>
+
+          <strong>
+            Укажите ИИ,
+          </strong>
+
+          какие источники использовать в первую очередь
+          и какие сведения перепроверять по первоисточнику
+        </div>
+
+      </div>
+
+    <div class="cforesearch-actions cforesearch-actions-between">
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-back"
+              data-cforesearch-prev="1">
+        ← Назад
+      </button>
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-main"
+              data-cforesearch-next="1">
+        Продолжить →
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ===================================================
+     ШАГ 3
+     =================================================== -->
+
+<section class="cforesearch-panel"
+         data-cforesearch-panel="2">
+
+  <div class="cforesearch-panel-head">
+
+    <div class="cforesearch-step">
+      Шаг 3 из 5
+    </div>
+
+    <h3>
+      Проверьте выводы ИИ
+    </h3>
+
+    <p>
+      ИИ собрал факты и сделал несколько выводов.
+      Отметьте те, которые не подтверждаются приведенными
+      данными или звучат слишком категорично
+    </p>
+
+  </div>
+
+
+  <div class="cforesearch-facts-box">
+
+    <div class="cforesearch-facts-title">
+      Что нашел ИИ
+    </div>
+
+    <ul>
+
+      <li>
+        Банк России сохранил ключевую ставку на уровне 14%
+      </li>
+
+      <li>
+        Средняя ставка по краткосрочным корпоративным
+        кредитам в июле составила 16,8%
+      </li>
+
+      <li>
+        Неценовые условия кредитования остаются жесткими
+      </li>
+
+      <li>
+        На 2027 год есть прогнозы дальнейшего изменения
+        ключевой ставки, но это именно прогнозы
+      </li>
+
+    </ul>
+
+  </div>
+
+
+  <div class="cforesearch-conclusions-title">
+    Какие выводы ИИ вы бы перепроверили?
+  </div>
+
+
+  <div class="cforesearch-conclusions">
+
+
+    <button type="button"
+            class="cforesearch-conclusion"
+            data-cforesearch-conclusion
+            data-cforesearch-needs-check="false">
+
+      Сохранение ключевой ставки на уровне 14% само по себе
+      не означает, что ставку по новым кредитам
+      в бюджете-2027 можно оставить без изменений
+
+      <div class="cforesearch-conclusion-feedback"></div>
+
+    </button>
+
+
+    <button type="button"
+            class="cforesearch-conclusion"
+            data-cforesearch-conclusion
+            data-cforesearch-needs-check="true">
+
+      Так как Банк России не снизил ключевую ставку,
+      в 2027 году кредиты для компаний точно подорожают
+
+      <div class="cforesearch-conclusion-feedback"></div>
+
+    </button>
+
+
+    <button type="button"
+            class="cforesearch-conclusion"
+            data-cforesearch-conclusion
+            data-cforesearch-needs-check="false">
+
+      Так как неценовые условия остаются жесткими,
+      при планировании финансирования стоит учитывать
+      не только процентную ставку, но и требования банков
+      к заемщику
+
+      <div class="cforesearch-conclusion-feedback"></div>
+
+    </button>
+
+
+    <button type="button"
+            class="cforesearch-conclusion"
+            data-cforesearch-conclusion
+            data-cforesearch-needs-check="true">
+
+      Так как средняя ставка по краткосрочным корпоративным
+      кредитам составляет 16,8%, именно 16,8% и нужно
+      заложить в бюджет нашей компании
+
+      <div class="cforesearch-conclusion-feedback"></div>
+
+    </button>
+
+
+    <button type="button"
+            class="cforesearch-conclusion"
+            data-cforesearch-conclusion
+            data-cforesearch-needs-check="false">
+
+      Средняя ставка 16,8% показывает ориентир рынка,
+      но не позволяет определить, по какой ставке кредит
+      получит именно наша компания
+
+      <div class="cforesearch-conclusion-feedback"></div>
+
+    </button>
+
+
+    <button type="button"
+            class="cforesearch-conclusion"
+            data-cforesearch-conclusion
+            data-cforesearch-needs-check="true">
+
+      Если ключевая ставка в 2027 году снизится на 3 п. п.,
+      кредит нашей компании тоже станет дешевле
+      примерно на 3 п. п.
+
+      <div class="cforesearch-conclusion-feedback"></div>
+
+    </button>
+
+
+    <button type="button"
+            class="cforesearch-conclusion"
+            data-cforesearch-conclusion
+            data-cforesearch-needs-check="false">
+
+      Пока данных недостаточно, чтобы назвать одну надежную
+      ставку для бюджета-2027: нужен как минимум диапазон
+      сценариев и данные о возможных условиях финансирования
+      самой компании
+
+      <div class="cforesearch-conclusion-feedback"></div>
+
+    </button>
+
+  </div>
+
+
+  <div class="cforesearch-actions">
+
+    <button type="button"
+            class="cforesearch-btn cforesearch-btn-check"
+            data-cforesearch-check-conclusions
+            disabled>
+      Проверить
+    </button>
+
+  </div>
+
+
+  <div class="cforesearch-reveal"
+       data-cforesearch-conclusion-review>
+
+
+    <div class="cforesearch-advice">
+
+      <h4>
+        Что добавить в промпт
+      </h4>
+
+      <p>
+        Просите ИИ обосновывать существенные выводы фактами
+        и ссылками на источники. Если данных недостаточно —
+        ИИ должен прямо это указать, а не достраивать ответ
+        предположениями
+      </p>
+
+    </div>
+
+    <div class="cforesearch-actions cforesearch-actions-between">
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-back"
+              data-cforesearch-prev="2">
+        ← Назад
+      </button>
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-main"
+              data-cforesearch-next="2">
+        Продолжить →
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ===================================================
+     ШАГ 4
+     6 из 8 карточек стоят неправильно
+     =================================================== -->
+
+<section class="cforesearch-panel"
+         data-cforesearch-panel="3">
+
+  <div class="cforesearch-panel-head">
+
+    <div class="cforesearch-step">
+      Шаг 4 из 5
+    </div>
+
+    <h3>
+      Проверьте данные для решения
+    </h3>
+
+    <p>
+      ИИ уже распределил информацию. Проверьте его работу
+      и перенесите в другие области те данные,
+      которые оказались не на своем месте
+    </p>
+
+  </div>
+
+
+  <div class="cforesearch-board-instruction">
+
+    <strong>Задача:</strong>
+    отделите внешние рыночные данные и прогнозы
+    от информации, которую можно получить только
+    применительно к вашей компании
+
+  </div>
+
+
+  <div class="cforesearch-board"
+       data-cforesearch-board="decision">
+
+    <div class="cforesearch-zones">
+
+
+      <!-- ТЕКУЩИЙ РЫНОК:
+           1 правильно, 2 неправильно -->
+
+      <div class="cforesearch-dropzone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="current">
+
+        <div class="cforesearch-dropzone-title">
+          Что происходит на рынке сейчас
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="current">
+            Последняя оценка неценовых условий кредитования
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="future">
+            Прогноз Банка России на 2027 год
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="company">
+            Предварительные ставки от двух-трех банков
+            для нашей компании
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- БУДУЩЕЕ:
+           1 правильно, 2 неправильно -->
+
+      <div class="cforesearch-dropzone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="future">
+
+        <div class="cforesearch-dropzone-title">
+          Что может измениться в 2027 году
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="future">
+            Прогнозы банков и рейтинговых агентств
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="current">
+            Ключевая ставка и последнее решение Банка России
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="company">
+            Обеспечение, ковенанты и кредитный профиль компании
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- КОМПАНИЯ:
+           оба неправильно -->
+
+      <div class="cforesearch-dropzone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="company">
+
+        <div class="cforesearch-dropzone-title">
+          Что нужно узнать именно о нашей компании
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="current">
+            Фактические ставки по новым корпоративным кредитам
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="company">
+            Срок и объем новых кредитов компании
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="cforesearch-actions">
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-check"
+              data-cforesearch-check-board="decision">
+        Проверить
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="cforesearch-reveal"
+       data-cforesearch-decision-review>
+
+
+    <div class="cforesearch-limit-grid">
+
+      <div class="cforesearch-limit-card cforesearch-limit-web">
+
+        <h4>
+          Что даст поиск в интернете:
+        </h4>
+
+        <ul>
+          <li>текущую ситуацию на рынке;</li>
+          <li>фактическую динамику ставок;</li>
+          <li>прогнозы и ожидания;</li>
+          <li>диапазон внешних рисков</li>
+        </ul>
+
+      </div>
+
+
+      <div class="cforesearch-limit-card cforesearch-limit-company">
+
+        <h4>
+          Чего в интернете нет:
+        </h4>
+
+        <ul>
+
+          <li>
+            точную ставку, по которой банки будут кредитовать
+            именно вашу компанию;
+          </li>
+
+          <li>
+            будущие требования банков к конкретной сделке;
+          </li>
+
+          <li>
+            окончательный запас, который стоит заложить
+            в ваш бюджет
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+     <div class="cforesearch-tip">
+
+        <div class="cforesearch-tip-icon">
+          !
+        </div>
+
+        <div>
+
+          <strong>
+            Попросите ИИ не только сделать вывод,
+          </strong>
+
+          но и перечислить данные, которых ему не хватает для надежного ответа
+
+        </div>
+
+      </div>
+
+    <div class="cforesearch-actions cforesearch-actions-between">
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-back"
+              data-cforesearch-prev="3">
+        ← Назад
+      </button>
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-main"
+              data-cforesearch-next="3">
+        Продолжить →
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ===================================================
+     ШАГ 5
+     7 из 8 карточек стоят неправильно
+     =================================================== -->
+
+<section class="cforesearch-panel"
+         data-cforesearch-panel="4">
+
+  <div class="cforesearch-panel-head">
+
+    <div class="cforesearch-step">
+      Шаг 5 из 5
+    </div>
+
+    <h3>
+      Проверьте структуру промпта
+    </h3>
+
+    <p>
+      Фрагменты промпта уже распределены по блокам,
+      но ИИ допустил ошибки. Перетащите неудачно
+      расположенные фрагменты в подходящие разделы
+    </p>
+
+  </div>
+
+
+  <div class="cforesearch-board"
+       data-cforesearch-board="prompt">
+
+    <div class="cforesearch-zones cforesearch-prompt-zones">
+
+
+      <!-- ЗАДАЧА — неправильно -->
+
+      <div class="cforesearch-dropzone cforesearch-prompt-zone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="task">
+
+        <div class="cforesearch-dropzone-title">
+          Задача
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="boundaries">
+
+            Используй актуальные данные и доступные прогнозы на 2027 год по российскому
+            рынку корпоративного кредитования
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ГРАНИЦЫ — неправильно -->
+
+      <div class="cforesearch-dropzone cforesearch-prompt-zone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="boundaries">
+
+        <div class="cforesearch-dropzone-title">
+          Границы поиска
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="sources">
+
+            Для ставок, статистики и решений регулятора
+            в первую очередь используй первичные материалы
+            Банка России
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ИСТОЧНИКИ — оба неправильно -->
+
+      <div class="cforesearch-dropzone cforesearch-prompt-zone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="sources">
+
+        <div class="cforesearch-dropzone-title">
+          Источники
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="task">
+
+            Помоги определить, нужно ли увеличить ставку
+            по новым кредитам в бюджете на 2027 год
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ПРОВЕРКА — оба неправильно -->
+
+      <div class="cforesearch-dropzone cforesearch-prompt-zone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="verification">
+
+        <div class="cforesearch-dropzone-title">
+          Правила проверки
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="guardrails">
+
+            Не определяй ставку для нашей компании только
+            по среднерыночным данным. Если информации
+            недостаточно, перечисли, что нужно узнать дополнительно
+
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="format">
+
+            Для каждого существенного вывода укажи,
+            на каких фактах он основан, и дай ссылки
+            на подтверждающие источники
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- НЕ ДОДУМЫВАТЬ — неправильно -->
+
+      <div class="cforesearch-dropzone cforesearch-prompt-zone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="guardrails">
+
+        <div class="cforesearch-dropzone-title">
+          Что нельзя додумывать
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="sources">
+
+            Прогнозы банков, рейтинговых агентств
+            и комментарии аналитиков показывай отдельно
+            от подтвержденных фактов
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ФОРМАТ:
+           1 правильно + 1 неправильно -->
+
+      <div class="cforesearch-dropzone cforesearch-prompt-zone"
+           tabindex="0"
+           data-cforesearch-drop
+           data-cforesearch-target="format">
+
+        <div class="cforesearch-dropzone-title">
+          Формат ответа
+        </div>
+
+        <div class="cforesearch-dropzone-content">
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="format">
+
+            Покажи отдельно текущие факты, прогнозы на 2027 год,
+            факторы возможного удорожания и удешевления кредитов,
+            а также данные, которых не хватает для решения
+
+          </div>
+
+          <div class="cforesearch-drag-card"
+               draggable="true"
+               tabindex="0"
+               data-cforesearch-correct="verification">
+
+            Если источники расходятся, покажи расхождение
+            и не выбирай одну версию без объяснения
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="cforesearch-actions">
+
+      <button type="button"
+              class="cforesearch-btn cforesearch-btn-check"
+              data-cforesearch-check-board="prompt">
+        Проверить
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="cforesearch-reveal"
+       data-cforesearch-prompt-success>
+
+    <div class="cforesearch-prompt-done">
+
+      <strong>
+        Готово
+      </strong>
+
+      Теперь все элементы промпта стоят на своих местах
+
+
+      <div class="cforesearch-download-actions">
+
+        <button type="button"
+                class="cforesearch-btn cforesearch-btn-main"
+                data-cforesearch-copy>
+          Скопировать готовый промпт
+        </button>
+
+        <button type="button"
+                class="cforesearch-btn cforesearch-btn-check"
+                data-cforesearch-download>
+          Скачать промпт целиком
+        </button>
+
+      </div>
+
+
+      <div class="cforesearch-copy-status"
+           data-cforesearch-copy-status></div>
+
+    </div>
+
+  </div>
+
+
+  <div class="cforesearch-actions cforesearch-actions-left">
+
+    <button type="button"
+            class="cforesearch-btn cforesearch-btn-back"
+            data-cforesearch-prev="4">
+      ← Назад
+    </button>
+
+  </div>
+
+</section>
+
+
+</div>
+
+
+<!-- =====================================================
+     НАЧАТЬ ЗАНОВО
+     ===================================================== -->
+
+<div class="cforesearch-restart-wrap cforesearch-hidden"
+     data-cforesearch-restart-wrap>
+
+  <button type="button"
+          class="cforesearch-btn cforesearch-btn-restart"
+          data-cforesearch-restart>
+    Начать заново
+  </button>
+
+</div>
+
+
+</div>
+</section>
+
+
+<script>
+(() => {
+
+  document
+    .querySelectorAll('[data-cforesearch-root]')
+    .forEach(root => {
+
+      const initialMarkup = root.innerHTML;
+
+      let dragActive = false;
+      let pointerY = null;
+      let autoScrollFrame = null;
+
+
+      /* =====================================================
+         AUTOSCROLL
+         ===================================================== */
+
+      function autoScroll(){
+
+        if(!dragActive){
+          autoScrollFrame = null;
+          return;
+        }
+
+        if(pointerY !== null){
+
+          const edge = 120;
+          const speed = 16;
+
+          if(pointerY < edge){
+
+            window.scrollBy(0,-speed);
+
+          }else if(
+            window.innerHeight - pointerY < edge
+          ){
+
+            window.scrollBy(0,speed);
+
+          }
+
+        }
+
+        autoScrollFrame =
+          requestAnimationFrame(autoScroll);
+
+      }
+
+
+      root.addEventListener(
+        'dragover',
+        event => {
+
+          pointerY = event.clientY;
+
+        }
+      );
+
+
+      function startAutoScroll(){
+
+        dragActive = true;
+
+        if(!autoScrollFrame){
+
+          autoScrollFrame =
+            requestAnimationFrame(autoScroll);
+
+        }
+
+      }
+
+
+      function stopAutoScroll(){
+
+        dragActive = false;
+        pointerY = null;
+
+      }
+
+
+      /* =====================================================
+         INIT
+         ===================================================== */
+
+      function initWidget(){
+
+        /* ===================================================
+           NAVIGATION
+           =================================================== */
+
+        const tabs = [
+          ...root.querySelectorAll('[data-cforesearch-tab]')
+        ];
+
+        const panels = [
+          ...root.querySelectorAll('[data-cforesearch-panel]')
+        ];
+
+        const restartWrap =
+          root.querySelector(
+            '[data-cforesearch-restart-wrap]'
+          );
+
+        let unlocked = 0;
+
+
+        function showPanel(index){
+
+          if(
+            index < 0 ||
+            index >= panels.length ||
+            index > unlocked
+          ){
+            return;
+          }
+
+          tabs.forEach((tab,n) => {
+
+            tab.classList.toggle(
+              'cforesearch-active',
+              n === index
+            );
+
+          });
+
+          panels.forEach((panel,n) => {
+
+            panel.classList.toggle(
+              'cforesearch-active',
+              n === index
+            );
+
+          });
+
+          if(restartWrap){
+
+            restartWrap.classList.toggle(
+              'cforesearch-hidden',
+              index === 0
+            );
+
+          }
+
+        }
+
+
+        function unlock(index){
+
+          unlocked =
+            Math.max(unlocked,index);
+
+          tabs.forEach((tab,n) => {
+
+            if(n <= unlocked){
+              tab.disabled = false;
+            }
+
+          });
+
+        }
+
+
+        function markDone(index){
+
+          if(tabs[index]){
+
+            tabs[index]
+              .classList
+              .add('cforesearch-done');
+
+          }
+
+        }
+
+
+        tabs.forEach((tab,index) => {
+
+          tab.addEventListener(
+            'click',
+            () => showPanel(index)
+          );
+
+        });
+
+
+        root
+          .querySelectorAll('[data-cforesearch-next]')
+          .forEach(button => {
+
+            button.addEventListener(
+              'click',
+              () => {
+
+                const current =
+                  Number(
+                    button.dataset.cforesearchNext
+                  );
+
+                markDone(current);
+                unlock(current + 1);
+                showPanel(current + 1);
+
+              }
+            );
+
+          });
+
+
+        root
+          .querySelectorAll('[data-cforesearch-prev]')
+          .forEach(button => {
+
+            button.addEventListener(
+              'click',
+              () => {
+
+                const current =
+                  Number(
+                    button.dataset.cforesearchPrev
+                  );
+
+                showPanel(current - 1);
+
+              }
+            );
+
+          });
+
+
+        /* ===================================================
+           ШАГ 1
+           =================================================== */
+
+        const taskInput =
+          root.querySelector(
+            '[data-cforesearch-task-input]'
+          );
+
+        const sendButton =
+          root.querySelector(
+            '[data-cforesearch-send]'
+          );
+
+        const screen1Review =
+          root.querySelector(
+            '[data-cforesearch-screen1-review]'
+          );
+
+
+        if(
+          taskInput &&
+          sendButton &&
+          screen1Review
+        ){
+
+          const updateSend = () => {
+
+            sendButton.disabled =
+              taskInput.value.trim().length === 0;
+
+          };
+
+
+          taskInput.addEventListener(
+            'input',
+            updateSend
+          );
+
+
+          sendButton.addEventListener(
+            'click',
+            () => {
+
+              if(
+                taskInput.value.trim().length === 0
+              ){
+                return;
+              }
+
+              screen1Review
+                .classList
+                .add('cforesearch-show');
+
+            }
+          );
+
+
+          updateSend();
+
+        }
+
+
+        /* ===================================================
+           НАЗВАНИЯ КОРЗИН
+           =================================================== */
+
+        const boardNames = {
+
+          sources:{
+            base:'Основа для решения задачи',
+            context:'Дополнительный контекст',
+            verify:'Нужна дополнительная проверка'
+          },
+
+          decision:{
+            current:'Что происходит на рынке сейчас',
+            future:'Что может измениться в 2027 году',
+            company:'Что нужно узнать именно о нашей компании'
+          },
+
+          prompt:{
+            task:'Задача',
+            boundaries:'Границы поиска',
+            sources:'Источники',
+            verification:'Правила проверки',
+            guardrails:'Что нельзя додумывать',
+            format:'Формат ответа'
+          }
+
+        };
+
+
+        /* ===================================================
+           DRAG BOARDS
+           =================================================== */
+
+        function setupBoard(boardName){
+
+          const board =
+            root.querySelector(
+              `[data-cforesearch-board="${boardName}"]`
+            );
+
+          if(!board){
+            return null;
+          }
+
+
+          const cards = [
+            ...board.querySelectorAll(
+              '.cforesearch-drag-card'
+            )
+          ];
+
+          const zones = [
+            ...board.querySelectorAll(
+              '[data-cforesearch-target]'
+            )
+          ];
+
+          const checkButton =
+            board.querySelector(
+              `[data-cforesearch-check-board="${boardName}"]`
+            );
+
+          let selectedCard = null;
+          let draggedCard = null;
+
+
+          function clearSelection(){
+
+            cards.forEach(card => {
+
+              card.classList.remove(
+                'cforesearch-selected'
+              );
+
+            });
+
+            selectedCard = null;
+
+          }
+
+
+          function clearFeedback(){
+
+            cards.forEach(card => {
+
+              card.classList.remove(
+                'cforesearch-correct',
+                'cforesearch-wrong'
+              );
+
+              const oldFeedback =
+                card.querySelector(
+                  '.cforesearch-card-feedback'
+                );
+
+              if(oldFeedback){
+                oldFeedback.remove();
+              }
+
+            });
+
+
+            if(boardName === 'prompt'){
+
+              const success =
+                root.querySelector(
+                  '[data-cforesearch-prompt-success]'
+                );
+
+              if(success){
+
+                success.classList.remove(
+                  'cforesearch-show'
+                );
+
+              }
+
+            }
+
+          }
+
+
+          function moveCard(card,zone){
+
+            if(
+              !card ||
+              !zone
+            ){
+              return;
+            }
+
+
+            const content =
+              zone.querySelector(
+                '.cforesearch-dropzone-content'
+              );
+
+            if(!content){
+              return;
+            }
+
+
+            clearFeedback();
+
+            content.appendChild(card);
+
+            clearSelection();
+
+          }
+
+
+          cards.forEach(card => {
+
+            card.addEventListener(
+              'click',
+              event => {
+
+                event.stopPropagation();
+
+
+                if(selectedCard === card){
+
+                  clearSelection();
+
+                  return;
+                }
+
+
+                clearSelection();
+
+                selectedCard = card;
+
+                card.classList.add(
+                  'cforesearch-selected'
+                );
+
+              }
+            );
+
+
+            card.addEventListener(
+              'keydown',
+              event => {
+
+                if(
+                  event.key === 'Enter' ||
+                  event.key === ' '
+                ){
+
+                  event.preventDefault();
+
+                  card.click();
+
+                }
+
+              }
+            );
+
+
+            card.addEventListener(
+              'dragstart',
+              event => {
+
+                draggedCard = card;
+
+                startAutoScroll();
+
+
+                if(event.dataTransfer){
+
+                  event.dataTransfer.effectAllowed =
+                    'move';
+
+                  try{
+
+                    event.dataTransfer.setData(
+                      'text/plain',
+                      'cforesearch'
+                    );
+
+                  }catch(error){
+                    /* ignore */
+                  }
+
+                }
+
+              }
+            );
+
+
+            card.addEventListener(
+              'dragend',
+              () => {
+
+                draggedCard = null;
+
+                stopAutoScroll();
+
+
+                zones.forEach(zone => {
+
+                  zone.classList.remove(
+                    'cforesearch-drop-hover'
+                  );
+
+                });
+
+              }
+            );
+
+          });
+
+
+          zones.forEach(zone => {
+
+            zone.addEventListener(
+              'dragover',
+              event => {
+
+                event.preventDefault();
+
+                zone.classList.add(
+                  'cforesearch-drop-hover'
+                );
+
+                if(event.dataTransfer){
+
+                  event.dataTransfer.dropEffect =
+                    'move';
+
+                }
+
+              }
+            );
+
+
+            zone.addEventListener(
+              'dragleave',
+              event => {
+
+                if(
+                  !zone.contains(
+                    event.relatedTarget
+                  )
+                ){
+
+                  zone.classList.remove(
+                    'cforesearch-drop-hover'
+                  );
+
+                }
+
+              }
+            );
+
+
+            zone.addEventListener(
+              'drop',
+              event => {
+
+                event.preventDefault();
+
+                zone.classList.remove(
+                  'cforesearch-drop-hover'
+                );
+
+                if(draggedCard){
+
+                  moveCard(
+                    draggedCard,
+                    zone
+                  );
+
+                }
+
+              }
+            );
+
+
+            /* Мобильный вариант:
+               выбрать карточку → нажать нужную область */
+
+            zone.addEventListener(
+              'click',
+              event => {
+
+                if(
+                  event.target.closest(
+                    '.cforesearch-drag-card'
+                  )
+                ){
+                  return;
+                }
+
+                if(selectedCard){
+
+                  moveCard(
+                    selectedCard,
+                    zone
+                  );
+
+                }
+
+              }
+            );
+
+
+            zone.addEventListener(
+              'keydown',
+              event => {
+
+                if(
+                  (
+                    event.key === 'Enter' ||
+                    event.key === ' '
+                  ) &&
+                  selectedCard
+                ){
+
+                  event.preventDefault();
+
+                  moveCard(
+                    selectedCard,
+                    zone
+                  );
+
+                }
+
+              }
+            );
+
+          });
+
+
+          function check(){
+
+            clearFeedback();
+
+            let allCorrect = true;
+
+
+            cards.forEach(card => {
+
+              const correct =
+                card.dataset.cforesearchCorrect;
+
+              const currentZone =
+                card.closest(
+                  '[data-cforesearch-target]'
+                );
+
+              const current =
+                currentZone
+                  ? currentZone.dataset.cforesearchTarget
+                  : null;
+
+
+              const feedback =
+                document.createElement('div');
+
+              feedback.className =
+                'cforesearch-card-feedback';
+
+
+              if(current === correct){
+
+                card.classList.add(
+                  'cforesearch-correct'
+                );
+
+                feedback.classList.add(
+                  'cforesearch-feedback-correct'
+                );
+
+                feedback.textContent =
+                  'Распределено верно';
+
+              }else{
+
+                allCorrect = false;
+
+                card.classList.add(
+                  'cforesearch-wrong'
+                );
+
+                feedback.classList.add(
+                  'cforesearch-feedback-wrong'
+                );
+
+                feedback.textContent =
+                  'Перенесите в: ' +
+                  boardNames[boardName][correct];
+
+              }
+
+
+              card.appendChild(feedback);
+
+            });
+
+
+            return allCorrect;
+
+          }
+
+
+          if(checkButton){
+
+            checkButton.addEventListener(
+              'click',
+              () => {
+
+                const allCorrect =
+                  check();
+
+
+                if(boardName === 'sources'){
+
+                  const review =
+                    root.querySelector(
+                      '[data-cforesearch-source-review]'
+                    );
+
+                  if(review){
+
+                    review.classList.add(
+                      'cforesearch-show'
+                    );
+
+                  }
+
+                }
+
+
+                if(boardName === 'decision'){
+
+                  const review =
+                    root.querySelector(
+                      '[data-cforesearch-decision-review]'
+                    );
+
+                  if(review){
+
+                    review.classList.add(
+                      'cforesearch-show'
+                    );
+
+                  }
+
+                }
+
+
+                if(
+                  boardName === 'prompt' &&
+                  allCorrect
+                ){
+
+                  const success =
+                    root.querySelector(
+                      '[data-cforesearch-prompt-success]'
+                    );
+
+                  if(success){
+
+                    success.classList.add(
+                      'cforesearch-show'
+                    );
+
+                  }
+
+                }
+
+              }
+            );
+
+          }
+
+
+          return{
+            check
+          };
+
+        }
+
+
+        setupBoard('sources');
+        setupBoard('decision');
+        setupBoard('prompt');
+
+
+        /* ===================================================
+           ШАГ 3
+           =================================================== */
+
+        const conclusions = [
+          ...root.querySelectorAll(
+            '[data-cforesearch-conclusion]'
+          )
+        ];
+
+        const conclusionCheck =
+          root.querySelector(
+            '[data-cforesearch-check-conclusions]'
+          );
+
+        const conclusionReview =
+          root.querySelector(
+            '[data-cforesearch-conclusion-review]'
+          );
+
+        let conclusionsLocked = false;
+
+
+        conclusions.forEach(card => {
+
+          card.addEventListener(
+            'click',
+            () => {
+
+              if(conclusionsLocked){
+                return;
+              }
+
+              card.classList.toggle(
+                'cforesearch-selected'
+              );
+
+
+              const selected =
+                conclusions.filter(item => {
+
+                  return item.classList.contains(
+                    'cforesearch-selected'
+                  );
+
+                }).length;
+
+
+              if(conclusionCheck){
+
+                conclusionCheck.disabled =
+                  selected === 0;
+
+              }
+
+            }
+          );
+
+        });
+
+
+        if(
+          conclusionCheck &&
+          conclusionReview
+        ){
+
+          conclusionCheck.addEventListener(
+            'click',
+            () => {
+
+              conclusionsLocked = true;
+
+
+              conclusions.forEach(card => {
+
+                const needsCheck =
+                  card.dataset.cforesearchNeedsCheck ===
+                  'true';
+
+                const selected =
+                  card.classList.contains(
+                    'cforesearch-selected'
+                  );
+
+                const feedback =
+                  card.querySelector(
+                    '.cforesearch-conclusion-feedback'
+                  );
+
+
+                card.classList.remove(
+                  'cforesearch-selected'
+                );
+
+                card.classList.add(
+                  'cforesearch-reviewed'
+                );
+
+
+                if(
+                  needsCheck &&
+                  selected
+                ){
+
+                  card.classList.add(
+                    'cforesearch-result-good'
+                  );
+
+                  feedback.textContent =
+                    'Вы отметили верно: этот вывод не подтверждается приведенными фактами.';
+
+                }else if(
+                  needsCheck &&
+                  !selected
+                ){
+
+                  card.classList.add(
+                    'cforesearch-result-wrong'
+                  );
+
+                  feedback.textContent =
+                    'Этот вывод тоже стоило перепроверить: приведенных данных для него недостаточно.';
+
+                }else if(
+                  !needsCheck &&
+                  selected
+                ){
+
+                  card.classList.add(
+                    'cforesearch-result-warning'
+                  );
+
+                  feedback.textContent =
+                    'Этот вывод допустим: он не выходит за пределы приведенных фактов.';
+
+                }else{
+
+                  card.classList.add(
+                    'cforesearch-result-good'
+                  );
+
+                  feedback.textContent =
+                    'Верно: этот вывод следует из приведенных фактов и сформулирован осторожно.';
+
+                }
+
+              });
+
+
+              conclusionReview
+                .classList
+                .add('cforesearch-show');
+
+            }
+          );
+
+        }
+
+
+        /* ===================================================
+           ГОТОВЫЙ ПРОМПТ
+           =================================================== */
+
+        const finalPrompt =
+`Помоги определить, не стоит ли увеличить ставку по новым кредитам в бюджете на 2027 год.
+
+Используй актуальные данные к октябрю 2026 года и доступные прогнозы на 2027 год по российскому рынку корпоративного кредитования.
+
+Для ставок, статистики и решений регулятора в первую очередь используй первичные материалы Банка России.
+
+Прогнозы банков, рейтинговых агентств и комментарии аналитиков показывай отдельно от подтвержденных фактов.
+
+Если источники расходятся, покажи расхождение и не выбирай одну версию без объяснения.
+
+Не определяй ставку для нашей компании только по среднерыночным данным. Если информации недостаточно, перечисли, что нужно узнать дополнительно.
+
+В ответе:
+— покажи отдельно текущие факты;
+— покажи прогнозы на 2027 год;
+— выдели факторы возможного удорожания кредитов;
+— выдели факторы возможного удешевления кредитов;
+— перечисли данные, которых не хватает для надежного решения;
+— для каждого существенного вывода укажи, на каких фактах он основан, и дай ссылки на подтверждающие источники.`;
+
+
+        const copyButton =
+          root.querySelector(
+            '[data-cforesearch-copy]'
+          );
+
+        const downloadButton =
+          root.querySelector(
+            '[data-cforesearch-download]'
+          );
+
+        const copyStatus =
+          root.querySelector(
+            '[data-cforesearch-copy-status]'
+          );
+
+
+        if(
+          copyButton &&
+          copyStatus
+        ){
+
+          copyButton.addEventListener(
+            'click',
+            async () => {
+
+              try{
+
+                await navigator.clipboard.writeText(
+                  finalPrompt
+                );
+
+                copyStatus.textContent =
+                  '✓ Промпт скопирован';
+
+              }catch(error){
+
+                const helper =
+                  document.createElement(
+                    'textarea'
+                  );
+
+                helper.value =
+                  finalPrompt;
+
+                helper.style.position =
+                  'fixed';
+
+                helper.style.left =
+                  '-9999px';
+
+                document.body.appendChild(
+                  helper
+                );
+
+                helper.select();
+
+
+                try{
+
+                  document.execCommand(
+                    'copy'
+                  );
+
+                  copyStatus.textContent =
+                    '✓ Промпт скопирован';
+
+                }catch(copyError){
+
+                  copyStatus.textContent =
+                    'Не удалось скопировать автоматически.';
+
+                }
+
+
+                helper.remove();
+
+              }
+
+            }
+          );
+
+        }
+
+
+        if(
+          downloadButton &&
+          copyStatus
+        ){
+
+          downloadButton.addEventListener(
+            'click',
+            () => {
+
+              const blob =
+                new Blob(
+                  [finalPrompt],
+                  {
+                    type:'text/plain;charset=utf-8'
+                  }
+                );
+
+              const url =
+                URL.createObjectURL(blob);
+
+              const link =
+                document.createElement('a');
+
+              link.href = url;
+
+              link.download =
+                'promt_kreditovanie_2027.txt';
+
+              document.body.appendChild(link);
+
+              link.click();
+
+              link.remove();
+
+
+              setTimeout(
+                () => URL.revokeObjectURL(url),
+                0
+              );
+
+
+              copyStatus.textContent =
+                '✓ Промпт скачан';
+
+            }
+          );
+
+        }
+
+
+        /* ===================================================
+           RESTART
+           =================================================== */
+
+        const restart =
+          root.querySelector(
+            '[data-cforesearch-restart]'
+          );
+
+
+        if(restart){
+
+          restart.addEventListener(
+            'click',
+            () => {
+
+              stopAutoScroll();
+
+              root.innerHTML =
+                initialMarkup;
+
+              initWidget();
+
+            }
+          );
+
+        }
+
+
+        showPanel(0);
+
+      }
+
+
+      initWidget();
+
+    });
+
+})();
+</script>
+
+</body>
+</html>
