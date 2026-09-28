@@ -927,11 +927,6 @@
     padding-right:20px;
   }
 
-  .cforesearch-zones,
-  .cforesearch-prompt-zones{
-    grid-template-columns:1fr;
-  }
-
   .cforesearch-dropzone{
     min-height:110px;
   }
@@ -990,6 +985,13 @@
 
   .cforesearch-panel-head h3{
     font-size:23px;
+  }
+
+  /* На шагах 2, 4 и 5 сохраняем три колонки при любой
+     ширине фрейма, кроме мобильной версии. */
+  .cforesearch-zones,
+  .cforesearch-prompt-zones{
+    grid-template-columns:1fr;
   }
 
   .cforesearch-structure{
@@ -1580,7 +1582,7 @@
 
     </button>
 
-
+     
     <button type="button"
             class="cforesearch-conclusion"
             data-cforesearch-conclusion
@@ -1595,7 +1597,6 @@
 
     </button>
 
-     
     <button type="button"
             class="cforesearch-conclusion"
             data-cforesearch-conclusion
@@ -1609,7 +1610,7 @@
     </button>
 
 
-   <button type="button"
+    <button type="button"
             class="cforesearch-conclusion"
             data-cforesearch-conclusion
             data-cforesearch-needs-check="true">
@@ -2002,7 +2003,7 @@
     <p>
       Фрагменты промпта уже распределены по блокам,
       но ИИ допустил ошибки. Перетащите неудачно
-      расположенные фрагменты в подходящие разделы
+      расположенные фрагменты в подходящие разделы. После того, как все фрагменты окажутся на своих местах, вы сможете СКАЧАТЬ ПРОМПТ
     </p>
 
   </div>
@@ -2308,11 +2309,138 @@
       let dragActive = false;
       let pointerY = null;
       let autoScrollFrame = null;
+      let scrollHost = null;
 
 
       /* =====================================================
-         AUTOSCROLL
+         AUTOSCROLL ПРИ ПЕРЕТАСКИВАНИИ
+         Если нужная область ушла выше или ниже видимой части
+         фрейма, документ автоматически прокручивается.
          ===================================================== */
+
+      function getScrollableParent(element){
+
+        let node = element ? element.parentElement : null;
+
+        while(node && node !== document.body){
+
+          const style = window.getComputedStyle(node);
+          const overflowY = style.overflowY;
+          const canScroll =
+            (overflowY === 'auto' || overflowY === 'scroll') &&
+            node.scrollHeight > node.clientHeight + 2;
+
+          if(canScroll){
+            return node;
+          }
+
+          node = node.parentElement;
+        }
+
+        return document.scrollingElement || document.documentElement;
+
+      }
+
+
+      function getScrollBounds(){
+
+        if(
+          scrollHost &&
+          scrollHost !== document.scrollingElement &&
+          scrollHost !== document.documentElement &&
+          scrollHost !== document.body
+        ){
+
+          const rect = scrollHost.getBoundingClientRect();
+
+          return {
+            top:Math.max(0,rect.top),
+            bottom:Math.min(
+              window.innerHeight || document.documentElement.clientHeight,
+              rect.bottom
+            )
+          };
+        }
+
+        return {
+          top:0,
+          bottom:window.innerHeight || document.documentElement.clientHeight
+        };
+
+      }
+
+
+      function scrollByDelta(delta){
+
+        if(!delta){
+          return;
+        }
+
+        let moved = false;
+
+        if(
+          scrollHost &&
+          scrollHost !== document.scrollingElement &&
+          scrollHost !== document.documentElement &&
+          scrollHost !== document.body
+        ){
+
+          const before = scrollHost.scrollTop;
+          scrollHost.scrollTop += delta;
+          moved = scrollHost.scrollTop !== before;
+
+        }else{
+
+          const scroller =
+            document.scrollingElement ||
+            document.documentElement;
+
+          const before = scroller.scrollTop;
+          scroller.scrollTop += delta;
+          moved = scroller.scrollTop !== before;
+
+        }
+
+        /* Если интерактив находится в iframe и внутренний
+           документ уже уперся в край, пробуем прокрутить
+           родительскую страницу. Это сработает только при
+           доступе к parent из того же origin; иначе просто
+           безопасно пропускаем этот шаг. */
+        if(!moved && window.parent !== window){
+
+          try{
+
+            const frame = window.frameElement;
+
+            if(frame){
+
+              const frameRect = frame.getBoundingClientRect();
+              const parentHeight = window.parent.innerHeight;
+              const parentPointerY = frameRect.top + pointerY;
+              const parentEdge = 110;
+
+              if(
+                delta < 0 &&
+                parentPointerY < parentEdge
+              ){
+                window.parent.scrollBy(0,delta);
+              }else if(
+                delta > 0 &&
+                parentHeight - parentPointerY < parentEdge
+              ){
+                window.parent.scrollBy(0,delta);
+              }
+
+            }
+
+          }catch(error){
+            /* iframe другого origin: прокрутка parent недоступна */
+          }
+
+        }
+
+      }
+
 
       function autoScroll(){
 
@@ -2323,20 +2451,36 @@
 
         if(pointerY !== null){
 
-          const edge = 120;
-          const speed = 16;
+          const edge = 140;
+          const maxSpeed = 24;
+          const bounds = getScrollBounds();
+          let delta = 0;
 
-          if(pointerY < edge){
+          if(pointerY < bounds.top + edge){
 
-            window.scrollBy(0,-speed);
+            const distance =
+              Math.max(0,pointerY - bounds.top);
+
+            const strength =
+              Math.max(0,1 - distance / edge);
+
+            delta = -Math.max(6,Math.round(maxSpeed * strength));
 
           }else if(
-            window.innerHeight - pointerY < edge
+            pointerY > bounds.bottom - edge
           ){
 
-            window.scrollBy(0,speed);
+            const distance =
+              Math.max(0,bounds.bottom - pointerY);
+
+            const strength =
+              Math.max(0,1 - distance / edge);
+
+            delta = Math.max(6,Math.round(maxSpeed * strength));
 
           }
+
+          scrollByDelta(delta);
 
         }
 
@@ -2346,19 +2490,35 @@
       }
 
 
-      root.addEventListener(
-        'dragover',
-        event => {
+      function trackDragPointer(event){
 
-          pointerY = event.clientY;
-
+        if(!dragActive){
+          return;
         }
+
+        pointerY = event.clientY;
+
+      }
+
+
+      /* Слушаем весь документ, а не только сам виджет: так
+         автопрокрутка продолжает работать, когда курсор во
+         время drag находится у верхней/нижней границы фрейма. */
+      document.addEventListener(
+        'dragover',
+        trackDragPointer,
+        true
       );
 
 
-      function startAutoScroll(){
+      function startAutoScroll(event){
 
         dragActive = true;
+        scrollHost = getScrollableParent(root);
+
+        if(event && Number.isFinite(event.clientY)){
+          pointerY = event.clientY;
+        }
 
         if(!autoScrollFrame){
 
@@ -2374,6 +2534,12 @@
 
         dragActive = false;
         pointerY = null;
+        scrollHost = null;
+
+        if(autoScrollFrame){
+          cancelAnimationFrame(autoScrollFrame);
+          autoScrollFrame = null;
+        }
 
       }
 
@@ -2796,7 +2962,7 @@
 
                 draggedCard = card;
 
-                startAutoScroll();
+                startAutoScroll(event);
 
 
                 if(event.dataTransfer){
